@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using animationparameters;
 
 namespace autodeskcharacter.fapmapper

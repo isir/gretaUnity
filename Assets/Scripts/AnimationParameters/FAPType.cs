@@ -1,4 +1,4 @@
-﻿namespace animationparameters
+namespace animationparameters
 {
     public enum FAPType
     {

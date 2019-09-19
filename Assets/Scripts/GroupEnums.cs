@@ -1,4 +1,4 @@
-﻿public class InterpersonalAttitude
+public class InterpersonalAttitude
 {
     public InterpersonalAttitude(float dom, float lik)
     {
