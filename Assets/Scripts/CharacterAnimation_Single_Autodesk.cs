@@ -230,7 +230,7 @@ public class CharacterAnimation_Single_Autodesk : MonoBehaviour
                     // contain the information at all and I don't want to put my hands in that part of your code.
                     Destroy(_currentAudioSource.clip);
 
-                    _currentAudioSource.clip = AudioClip.Create("text", len, 1, currentAudio.getSampleRate(), false, false);
+                    _currentAudioSource.clip = AudioClip.Create("text", len, 1, currentAudio.getSampleRate(), false);
                     float[] buffer = new float[len];
                     for (int iPCM = 44; iPCM < len; iPCM++)
                     {

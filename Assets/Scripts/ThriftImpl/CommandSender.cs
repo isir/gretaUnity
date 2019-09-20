@@ -41,9 +41,9 @@ namespace thriftImpl
                 }
 
                 _cpt++;
-                Thread workThread = new Thread(() => { send(message); });
-                workThread.Start();
-                //send (message);
+                /*Thread workThread = new Thread(() => { send(message); });
+                workThread.Start();*/
+                send (message);
             }
             else {
                 Debug.Log("animationReceiver on host: " + getHost() + " and port: " + getPort() + " not connected");
@@ -128,8 +128,9 @@ namespace thriftImpl
                 }
 
                 _cpt++;
-                Thread workThread = new Thread(() => { send(message); });
-                workThread.Start();
+                /*Thread workThread = new Thread(() => { send(message); });
+                workThread.Start();*/
+                send(message);
             }
             else
             {
