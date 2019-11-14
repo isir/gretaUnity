@@ -9,14 +9,12 @@ public class GretaObjectTracker : MonoBehaviour
 {
 	/// <summary>The object to follow with the agent's gaze.</summary>
 	public GameObject ObjectToFollowWithGaze;
-	/// <summary>The objects which's positions, orientations and scales have to be tracked and reproduced in the GRETA environment.</summary>
-	public List<GameObject> TrackedObjects = new List<GameObject>();
 	/// <summary>Simple enum for the influence of the agent's gaze, as in the body parts that should move to look at something.</summary>
     public enum Influence {EYES, HEAD, SHOULDER, TORSO, WHOLE};
 	/// <summary>The influence of the agent's gaze, as in the body parts that should move to look at something.</summary>
 	public Influence GazeInfluence = Influence.EYES;
 	/// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
-	public CharacterAnimation_Single_Autodesk CharacterAnimScript;
+	public GretaCharacterAnimator CharacterAnimScript;
 
 	/// <summary>The Thrift command sender linked to our GRETA instance.</summary>
     private CommandSender _commandSender;
@@ -35,10 +33,6 @@ public class GretaObjectTracker : MonoBehaviour
 	void Start()
 	{
 		_commandSender = CharacterAnimScript.commandSender;
-		foreach (GameObject trackedObject in TrackedObjects)
-		{
-			trackedObject.transform.hasChanged = false;
-		}
 		if (ObjectToFollowWithGaze != null)
 		{
 			_isFollowingWithGaze = true;
@@ -53,13 +47,6 @@ public class GretaObjectTracker : MonoBehaviour
 		{
 			if (!_commandSender.isConnected()) { return; }
 
-			// Initialise the GRETA environment if it hasn't been done before
-			foreach (GameObject trackedObject in TrackedObjects)
-			{
-				_commandSender.NotifyObject(trackedObject);
-				trackedObject.transform.hasChanged = false;
-			}
-
 			if (_isFollowingWithGaze)
 			{
 				CharacterAnimScript.FollowObjectWithGaze(ObjectToFollowWithGaze);
@@ -70,16 +57,6 @@ public class GretaObjectTracker : MonoBehaviour
 		}
 		else
 		{
-			foreach (GameObject trackedObject in TrackedObjects)
-			{
-				// If the trackedObject has changed since the last frame, update the GRETA Environment.
-				if (trackedObject.transform.hasChanged)
-				{
-					_commandSender.NotifyObject(trackedObject);
-					trackedObject.transform.hasChanged = false;
-				}
-			}
-
 			if (_isFollowingWithGaze && ObjectToFollowWithGaze.transform.hasChanged)
 			{
 				// If the trackedObject has changed since the last frame, update the GRETA Environment.

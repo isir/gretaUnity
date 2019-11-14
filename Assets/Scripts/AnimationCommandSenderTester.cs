@@ -5,11 +5,11 @@ public class AnimationCommandSenderTester : MonoBehaviour {
     public GameObject character;
     public string animationID;
 
-    private CharacterAnimation_Single_Autodesk _charAnimScript;
+    private GretaCharacterAnimator _charAnimScript;
 
     void Start()
     {
-        _charAnimScript = character.GetComponent<CharacterAnimation_Single_Autodesk>();
+        _charAnimScript = character.GetComponent<GretaCharacterAnimator>();
     }
 
     // Update is called once per frame

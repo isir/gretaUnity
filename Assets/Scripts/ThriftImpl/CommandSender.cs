@@ -49,6 +49,15 @@ namespace thriftImpl
         }
 
         /// <summary>
+        /// Notifies GRETA that the given character has changed its position.<br/>
+        /// </summary>
+        /// <param name="gameObject">character to be notified</param>
+        public void NotifyCharacter(GameObject gameObject)
+        {
+            SendCharacterMessage(gameObject);
+        }
+
+        /// <summary>
         /// Notifies GRETA that the given object has changed its position.<br/>
         /// If GRETA does not know the object, it will be created in its environment.<br/>
         /// If GRETA knows the object, it will be moved in its environment.<br/>
@@ -73,6 +82,49 @@ namespace thriftImpl
             GretaObjectTracker.Influence gazeInfluence = GretaObjectTracker.Influence.EYES)
         {
             SendObjectMessage(gameObject, true, gazeInfluence);
+        }
+
+        /// <summary>
+        /// Notifies GRETA that the given character has changed its position.
+        /// </summary>
+        /// <param name="gameObject">character to be notified</param>
+        private void SendCharacterMessage(GameObject gameObject)
+        {
+            if (isConnected())
+            {
+                Vector3 position = gameObject.transform.position;
+                Quaternion quaternion = gameObject.transform.rotation;
+                Vector3 scale = gameObject.transform.localScale;
+                Message message = new Message
+                {
+                    Type = "character",
+                    Time = 0,
+                    Id = _cpt.ToString(),
+                    // Some coordinates have to be flipped because GRETA doesn't handle coordinates the same way as Unity
+                    // The X axis for position is reversed in GRETA, as well as the Y and Z axis for rotation.
+                    Properties = new Dictionary<string, string>
+                    {
+                        {"position.x", (-(position.x)).ToString()},
+                        {"position.y", (position.y).ToString()},
+                        {"position.z", (position.z).ToString()},
+                        {"quaternion.x", quaternion.x.ToString()},
+                        {"quaternion.y", (-quaternion.y).ToString()},
+                        {"quaternion.z", (-quaternion.z).ToString()},
+                        {"quaternion.w", quaternion.w.ToString()},
+                        {"scale.x", scale.x.ToString()},
+                        {"scale.y", scale.y.ToString()},
+                        {"scale.z", scale.z.ToString()},
+                        {"id", gameObject.name}
+                    }
+                };
+
+                _cpt++;
+                ThreadPool.QueueUserWorkItem((stateInfo) => { send(message); });
+            }
+            else
+            {
+                Debug.Log("commandReceiver on host: " + getHost() + " and port: " + getPort() + " not connected");
+            }
         }
 
         /// <summary>

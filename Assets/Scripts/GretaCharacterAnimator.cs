@@ -8,7 +8,7 @@ using thriftImpl;
 using time;
 using tools;
 
-public class CharacterAnimation_Single_Autodesk : MonoBehaviour
+public class GretaCharacterAnimator : MonoBehaviour
 {
     static int NUMBER_OF_FAPS = Enum.GetNames(typeof(FAPType)).Length;
     static int NUMBER_OF_BAPS = 296;
