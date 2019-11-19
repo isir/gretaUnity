@@ -9,6 +9,8 @@ public class GretaCharacterSynchronizer : MonoBehaviour
 {
     /// <summary>The character which position, orientation and scale have to be synchronized and reproduced in the GRETA environment.</summary>
 	public GameObject character;
+    /// <summary>The character's head.</summary>
+	public GameObject characterHead;
     /// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
     public GretaCharacterAnimator CharacterAnimScript;
 
@@ -35,7 +37,7 @@ public class GretaCharacterSynchronizer : MonoBehaviour
             if (!_commandSender.isConnected()) { return; }
 
             // Initialise the GRETA environment if it hasn't been done before
-            _commandSender.NotifyCharacter(character);
+            _commandSender.NotifyCharacter(character, characterHead);
             character.transform.hasChanged = false;
 
             _instantiated = true;
@@ -44,7 +46,7 @@ public class GretaCharacterSynchronizer : MonoBehaviour
         {
             if (character.transform.hasChanged)
             {
-                _commandSender.NotifyCharacter(character);
+                _commandSender.NotifyCharacter(character, characterHead);
                 character.transform.hasChanged = false;
             }
         }

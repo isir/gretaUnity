@@ -51,10 +51,11 @@ namespace thriftImpl
         /// <summary>
         /// Notifies GRETA that the given character has changed its position.<br/>
         /// </summary>
-        /// <param name="gameObject">character to be notified</param>
-        public void NotifyCharacter(GameObject gameObject)
+        /// <param name="gameCharacter">character to be notified</param>
+        /// <param name="gameCharacterHead">character's head to be notified</param>
+        public void NotifyCharacter(GameObject gameCharacter, GameObject gameCharacterHead)
         {
-            SendCharacterMessage(gameObject);
+            SendCharacterMessage(gameCharacter, gameCharacterHead);
         }
 
         /// <summary>
@@ -87,14 +88,15 @@ namespace thriftImpl
         /// <summary>
         /// Notifies GRETA that the given character has changed its position.
         /// </summary>
-        /// <param name="gameObject">character to be notified</param>
-        private void SendCharacterMessage(GameObject gameObject)
+        /// <param name="gameCharacter">character to be notified</param>
+        /// <param name="gameCharacterHead">character's head to be notified</param>
+        private void SendCharacterMessage(GameObject gameCharacter, GameObject gameCharacterHead = null)
         {
             if (isConnected())
             {
-                Vector3 position = gameObject.transform.position;
-                Quaternion quaternion = gameObject.transform.rotation;
-                Vector3 scale = gameObject.transform.localScale;
+                Vector3 position = gameCharacter.transform.position;
+                Quaternion quaternion = gameCharacter.transform.rotation;
+                Vector3 scale = gameCharacter.transform.localScale;
                 Message message = new Message
                 {
                     Type = "character",
@@ -114,7 +116,57 @@ namespace thriftImpl
                         {"scale.x", scale.x.ToString()},
                         {"scale.y", scale.y.ToString()},
                         {"scale.z", scale.z.ToString()},
-                        {"id", gameObject.name}
+                        {"id", gameCharacter.name}
+                    }
+                };
+
+                _cpt++;
+                ThreadPool.QueueUserWorkItem((stateInfo) => { send(message); });
+
+                if (gameCharacterHead != null)
+                    SendCharacterHeadMessage(gameCharacterHead);
+            }
+            else
+            {
+                Debug.Log("commandReceiver on host: " + getHost() + " and port: " + getPort() + " not connected");
+            }
+        }
+
+        /// <summary>
+        /// Notifies GRETA that the given character's head has changed its position.
+        /// </summary>
+        /// <param name="gameCharacterHead">character's head to be notified</param>
+        private void SendCharacterHeadMessage(GameObject gameCharacterHead)
+        {
+            if (isConnected())
+            {
+                Vector3 position = gameCharacterHead.transform.position;
+                Quaternion quaternion = gameCharacterHead.transform.rotation;
+                Vector3 scale = gameCharacterHead.transform.localScale;
+                Vector3 shift = quaternion
+                                * new Vector3(0.5f * scale.x, -0.5f * scale.y, -0.5f * scale.z);
+                Message message = new Message
+                {
+                    Type = "character_head",
+                    Time = 0,
+                    Id = _cpt.ToString(),
+                    // Some coordinates have to be flipped because GRETA doesn't handle coordinates the same way as Unity
+                    // The X axis for position is reversed in GRETA, as well as the Y and Z axis for rotation.
+                    // Coordinates also have to be changed because objects in GRETA have their pivot at their bottom,
+                    //     while objects in Unity have their pivot in their center
+                    Properties = new Dictionary<string, string>
+                    {
+                        {"position.x", (-(position.x + shift.x)).ToString()},
+                        {"position.y", (position.y + shift.y).ToString()},
+                        {"position.z", (position.z + shift.z).ToString()},
+                        {"quaternion.x", quaternion.x.ToString()},
+                        {"quaternion.y", (-quaternion.y).ToString()},
+                        {"quaternion.z", (-quaternion.z).ToString()},
+                        {"quaternion.w", quaternion.w.ToString()},
+                        {"scale.x", scale.x.ToString()},
+                        {"scale.y", scale.y.ToString()},
+                        {"scale.z", scale.z.ToString()},
+                        {"id", gameCharacterHead.name}
                     }
                 };
 
@@ -168,7 +220,7 @@ namespace thriftImpl
                         {"scale.x", scale.x.ToString()},
                         {"scale.y", scale.y.ToString()},
                         {"scale.z", scale.z.ToString()},
-                        {"id", gameObject.name + gameObject.GetInstanceID()}
+                        {"id", gameObject.name}
                     }
                 };
                 if (gaze)
