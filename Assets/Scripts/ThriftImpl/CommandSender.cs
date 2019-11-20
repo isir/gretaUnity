@@ -196,7 +196,7 @@ namespace thriftImpl
             {
                 Vector3 position = gameObject.transform.position;
                 Quaternion quaternion = gameObject.transform.rotation;
-                Vector3 scale = gameObject.transform.localScale;
+                Vector3 scale = /*gameObject.transform.localScale*/ new Vector3(0.4f, 0.4f, 0.4f);
                 Vector3 shift = quaternion
                                 * new Vector3(0.5f * scale.x, -0.5f * scale.y, -0.5f * scale.z);
                 Message message = new Message
