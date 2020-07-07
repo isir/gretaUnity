@@ -9,13 +9,29 @@ public class GretaCharacterSynchronizer : MonoBehaviour
 {
     /// <summary>The character which position, orientation and scale have to be synchronized and reproduced in the GRETA environment.</summary>
 	public GameObject character;
-    /// <summary>The character's head.</summary>
-	public GameObject characterHead;
     /// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
     public GretaCharacterAnimator CharacterAnimScript;
 
+    /// <summary>The character's head.</summary>
+	private GameObject characterHead;
+    /// <summary>The character's left eye.</summary>
+	private GameObject characterLeftEye;
+    /// <summary>The character's right eye.</summary>
+	private GameObject characterRightEye;
+    /// <summary>The character's mouth.</summary>
+	private GameObject characterMouth;
+    /// <summary>The character's left hand.</summary>
+	private GameObject characterLeftHand;
+    /// <summary>The character's right hand.</summary>
+	private GameObject characterRightHand;
+    /// <summary>The character's left foot.</summary>
+	private GameObject characterLeftFoot;
+    /// <summary>The character's right foot.</summary>
+	private GameObject characterRightFoot;
+
     /// <summary>The Thrift command sender linked to our GRETA instance.</summary>
     private CommandSender _commandSender;
+
     /// <summary>
     /// Indicates whether we've done the initialization of the character synchronized in GRETA or not yet.<br/>
     /// This way, we give the character's initial position once, and then just synchronize it when it change.
@@ -24,7 +40,17 @@ public class GretaCharacterSynchronizer : MonoBehaviour
 
     void Start()
     {
+        characterHead = CharacterAnimScript.getBone("Head").gameObject;
+        characterLeftEye = CharacterAnimScript.getBone("LeftEye").gameObject;
+        characterRightEye = CharacterAnimScript.getBone("RightEye").gameObject;
+        characterMouth = CharacterAnimScript.getBone("TongueF").gameObject;
+        characterLeftHand = CharacterAnimScript.getBone("LeftHand").gameObject;
+        characterRightHand = CharacterAnimScript.getBone("RightHand").gameObject;
+        characterLeftFoot = CharacterAnimScript.getBone("LeftFoot").gameObject;
+        characterRightFoot = CharacterAnimScript.getBone("RightFoot").gameObject;
+
         _commandSender = CharacterAnimScript.commandSender;
+
         character.transform.hasChanged = false;
     }
 
@@ -37,7 +63,13 @@ public class GretaCharacterSynchronizer : MonoBehaviour
             if (!_commandSender.isConnected()) { return; }
 
             // Initialise the GRETA environment if it hasn't been done before
-            _commandSender.NotifyCharacter(character, characterHead);
+            _commandSender.NotifyCharacter(
+                character,
+                characterHead,
+                characterLeftEye, characterRightEye,
+                characterMouth,
+                characterLeftHand, characterRightHand,
+                characterLeftFoot, characterRightFoot);
             character.transform.hasChanged = false;
 
             _instantiated = true;
@@ -46,7 +78,13 @@ public class GretaCharacterSynchronizer : MonoBehaviour
         {
             if (character.transform.hasChanged)
             {
-                _commandSender.NotifyCharacter(character, characterHead);
+                _commandSender.NotifyCharacter(
+                    character,
+                    characterHead,
+                    characterLeftEye, characterRightEye,
+                    characterMouth,
+                    characterLeftHand, characterRightHand,
+                    characterLeftFoot, characterRightFoot);
                 character.transform.hasChanged = false;
             }
         }

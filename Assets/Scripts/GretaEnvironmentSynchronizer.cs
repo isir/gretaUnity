@@ -23,9 +23,33 @@ public class GretaEnvironmentSynchronizer : MonoBehaviour
     void Start()
     {
         _commandSender = CharacterAnimScript.commandSender;
+
+        List<GameObject> synchronizedObjectsCopy = new List<GameObject>(synchronizedObjects);
+        foreach (GameObject synchronizedObject in synchronizedObjectsCopy)
+        {
+            InsertObjectsToGazeAt(synchronizedObject, synchronizedObjects);
+        }
+
         foreach (GameObject synchronizedObject in synchronizedObjects)
         {
             synchronizedObject.transform.hasChanged = false;
+        }
+    }
+
+    void InsertObjectsToGazeAt(GameObject gameObject, List<GameObject> synchronizedObjects)
+    {
+        GretaObjectMetadata metadata = gameObject.GetComponent<GretaObjectMetadata>();
+        if (metadata)
+        {
+            GameObject objectToGazeAt = metadata.objectToGazeAt;
+            if (objectToGazeAt)
+            {
+                if (!synchronizedObjects.Contains(objectToGazeAt))
+                {
+                    synchronizedObjects.Add(objectToGazeAt);
+                    InsertObjectsToGazeAt(objectToGazeAt, synchronizedObjects);
+                }
+            }
         }
     }
 
