@@ -1,16 +1,19 @@
 using UnityEngine;
-using System.Collections.Generic;
 using thriftImpl;
 
 /// <summary>
-/// Simple behaviour script to synchronize a character in GRETA.
+/// Behaviour script to synchronize a character in GRETA.
 /// </summary>
 public class GretaCharacterSynchronizer : MonoBehaviour
 {
-    /// <summary>The character which position, orientation and scale have to be synchronized and reproduced in the GRETA environment.</summary>
-	public GameObject character;
+    /// <summary>The Thrift command sender linked to our GRETA instance.</summary>
+    private CommandSender _commandSender;
+
     /// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
     public GretaCharacterAnimator CharacterAnimScript;
+
+    /// <summary>The character which position, orientation and scale have to be synchronized and reproduced in the GRETA environment.</summary>
+	public GameObject character;
 
     /// <summary>The character's head.</summary>
 	private GameObject characterHead;
@@ -29,9 +32,6 @@ public class GretaCharacterSynchronizer : MonoBehaviour
     /// <summary>The character's right foot.</summary>
 	private GameObject characterRightFoot;
 
-    /// <summary>The Thrift command sender linked to our GRETA instance.</summary>
-    private CommandSender _commandSender;
-
     /// <summary>
     /// Indicates whether we've done the initialization of the character synchronized in GRETA or not yet.<br/>
     /// This way, we give the character's initial position once, and then just synchronize it when it change.
@@ -40,6 +40,10 @@ public class GretaCharacterSynchronizer : MonoBehaviour
 
     void Start()
     {
+        _commandSender = CharacterAnimScript.commandSender;
+
+        character.transform.hasChanged = false;
+
         characterHead = CharacterAnimScript.getBone("Head").gameObject;
         characterLeftEye = CharacterAnimScript.getBone("LeftEye").gameObject;
         characterRightEye = CharacterAnimScript.getBone("RightEye").gameObject;
@@ -48,21 +52,17 @@ public class GretaCharacterSynchronizer : MonoBehaviour
         characterRightHand = CharacterAnimScript.getBone("RightHand").gameObject;
         characterLeftFoot = CharacterAnimScript.getBone("LeftFoot").gameObject;
         characterRightFoot = CharacterAnimScript.getBone("RightFoot").gameObject;
-
-        _commandSender = CharacterAnimScript.commandSender;
-
-        character.transform.hasChanged = false;
     }
 
     void LateUpdate()
     {
-        // Using late update so that the position values we send are taken after all possible calculations (physics, etc)
+        // Using late update so that the position values we send are taken after all possible calculations (physics, etc).
 
         if (!_instantiated)
         {
             if (!_commandSender.isConnected()) { return; }
 
-            // Initialise the GRETA environment if it hasn't been done before
+            // Initialise the GRETA environment if it hasn't been done before.
             _commandSender.NotifyCharacter(
                 character,
                 characterHead,

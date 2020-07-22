@@ -129,6 +129,7 @@ namespace thriftImpl
                 Vector3 position = gameCharacter.transform.position;
                 Quaternion orientation = gameCharacter.transform.rotation;
                 Vector3 scale = gameCharacter.transform.localScale;
+
                 Message message = new Message
                 {
                     Type = "character",
@@ -186,8 +187,10 @@ namespace thriftImpl
         }
 
         /// <summary>
-        /// Notifies GRETA that the given character's head has changed its position.
+        /// Notifies GRETA that the given character's member has changed its position.
         /// </summary>
+        /// <param name="gameCharacterName">character's name to be notified</param>
+        /// <param name="characterMember">character's member name to be notified</param>
         /// <param name="gameCharacterMember">character's member to be notified</param>
         private void SendCharacterMemberMessage(string gameCharacterName, string characterMember, GameObject gameCharacterMember)
         {
@@ -197,6 +200,7 @@ namespace thriftImpl
                 Quaternion orientation = gameCharacterMember.transform.rotation;
                 Vector3 scale = gameCharacterMember.transform.localScale;
                 Vector3 shift = orientation * new Vector3(0.5f * scale.x, -0.5f * scale.y, -0.5f * scale.z);
+
                 Message message = new Message
                 {
                     Type = characterMember,
@@ -249,7 +253,7 @@ namespace thriftImpl
                 Quaternion orientation = gameObject.transform.rotation;
                 Vector3 scale = gameObject.transform.localScale;
                 Vector3 shift = orientation * new Vector3(0.5f * scale.x, -0.5f * scale.y, -0.5f * scale.z);
-                GretaObjectMetadata metadata = gameObject.GetComponent<GretaObjectMetadata>();
+
                 Message message = new Message
                 {
                     Type = "object",
@@ -274,12 +278,15 @@ namespace thriftImpl
                         {"scale.z", scale.z.ToString()}
                     }
                 };
-                if (metadata)
+
+                GretaObjectMetadata metadata = gameObject.GetComponent<GretaObjectMetadata>();
+                if (metadata != null)
                 {
                     GameObject objectToGazeAt = metadata.objectToGazeAt;
-                    if (objectToGazeAt)
+                    if (objectToGazeAt != null)
                         message.Properties.Add("metadata.objectToGazeAt", objectToGazeAt.name);
                 }
+
                 if (gaze)
                 {
                     message.Properties.Add("gaze", "true");

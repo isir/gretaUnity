@@ -1,28 +1,30 @@
 using UnityEngine;
-using System.Collections.Generic;
 using thriftImpl;
 
 /// <summary>
-/// Simple behaviour script to track objects in GRETA and to follow an object with an agent's gaze.
+/// Behaviour script to track objects in GRETA and to follow an object with an agent's gaze.
 /// </summary>
 public class GretaObjectTracker : MonoBehaviour
 {
-	/// <summary>The object to follow with the agent's gaze.</summary>
-	public GameObject ObjectToFollowWithGaze;
+    /// <summary>The Thrift command sender linked to our GRETA instance.</summary>
+    private CommandSender _commandSender;
+
+    /// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
+    public GretaCharacterAnimator CharacterAnimScript;
+
+    /// <summary>The object to follow with the agent's gaze.</summary>
+    public GameObject ObjectToFollowWithGaze;
 	/// <summary>Simple enum for the influence of the agent's gaze, as in the body parts that should move to look at something.</summary>
     public enum Influence {EYES, HEAD, SHOULDER, TORSO, WHOLE};
 	/// <summary>The influence of the agent's gaze, as in the body parts that should move to look at something.</summary>
 	public Influence GazeInfluence = Influence.EYES;
-	/// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
-	public GretaCharacterAnimator CharacterAnimScript;
 
-	/// <summary>The Thrift command sender linked to our GRETA instance.</summary>
-    private CommandSender _commandSender;
 	/// <summary>
 	/// Indicates whether we've done the initialization of the objects tracked in GRETA or not yet.<br/>
 	/// This way, we give the object's initial position once, and then just track the ones who changed.
 	/// </summary>
     private bool _instantiated;
+
 	/// <summary>
 	/// Indicates whether we're following an object, so if ObjectToFollowWithGaze is not null at Start.
 	/// That way, we consider it cannot be set to null in the middle of the program, and don't check if it is
@@ -33,6 +35,7 @@ public class GretaObjectTracker : MonoBehaviour
 	void Start()
 	{
 		_commandSender = CharacterAnimScript.commandSender;
+
 		if (ObjectToFollowWithGaze != null)
 		{
 			_isFollowingWithGaze = true;
@@ -41,7 +44,8 @@ public class GretaObjectTracker : MonoBehaviour
 	}
 
 	void LateUpdate () {
-		// Using late update so that the position values we send are taken after all possible calculations (physics, etc)
+
+		// Using late update so that the position values we send are taken after all possible calculations (physics, etc).
 
 		if (!_instantiated)
 		{
@@ -59,7 +63,7 @@ public class GretaObjectTracker : MonoBehaviour
 		{
 			if (_isFollowingWithGaze && ObjectToFollowWithGaze.transform.hasChanged)
 			{
-				// If the trackedObject has changed since the last frame, update the GRETA Environment.
+				// If the tracked object has changed since the last frame, update the GRETA Environment.
 				CharacterAnimScript.FollowObjectWithGaze(ObjectToFollowWithGaze, GazeInfluence);
 				ObjectToFollowWithGaze.transform.hasChanged = false;
 			}
