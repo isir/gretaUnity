@@ -4,7 +4,7 @@
 
 Simple Unity project that connects Unity3D and Greta. For more information on Greta, please see the [Greta repo](https://github.com/isir/greta/#greta)
 
-![Greta logo](https://github.com/isir/greta/blob/master/pictures/Greta_hello.png)
+![GretaUnity logo](https://user-images.githubusercontent.com/54807091/88153043-2f60d780-cc05-11ea-93e5-cc428a41ae99.PNG)
 
 Welcome to the public repository of the GretaUnity project.
 Greta is a virtual character engine that allows generating socio-emotional behaviors in order to build natural interactional scenario with human users.
