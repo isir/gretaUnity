@@ -216,7 +216,7 @@ public class GretaCharacterAnimator : MonoBehaviour
             {
                 //EB : I reconstructed the short values computed by cereproc from the byte buffer sent by VIB
                 // and used this short value to fill the float buffer needed by the audio clip
-                if (currentAudio.rawData.Length > 0)
+                if (currentAudio.getSampleRate()>0 && currentAudio.rawData.Length > 0)
                 {
                     int len = currentAudio.rawData.Length / 2;
                     //EB: I couldn't find in Unity how to clean an audio clip nor how to modify its buffer length,
