@@ -9,15 +9,15 @@ Simple Unity project that connects Unity3D and Greta. For more information on Gr
 Welcome to the public repository of the GretaUnity project.
 Greta is a virtual character engine that allows generating socio-emotional behaviors in order to build natural interactional scenario with human users.
 
-This project integrates a Greta agent in a Unity3D environment. It is run on Unity 5.4.1f1 (this version might change soon).
+This project integrates a Greta agent in a Unity3D environment. It was tested on Unity 5.4.1f1, and 2019.2.13f1 (this version might change soon).
 
 # Quick start
 
-1) Install Unity3D 5.4.1f1.
+1) Install Unity
 2) Clone the repository to retrieve all files from the Greta Project.
 3) Install Greta as explained [here](https://github.com/isir/greta#quick-start).
 4) Run Greta with one of the "GretaUnity" configurations in `greta/bin`.
-5) Open the GretaUnity project in Unity 5.4.1f1.
+5) Open the GretaUnity project in Unity.
 6) Open the `Camille` Scene in the `Scenes` folder.
 7) Click run.
 
