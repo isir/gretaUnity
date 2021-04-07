@@ -56,6 +56,8 @@ public class GretaCharacterAnimator : MonoBehaviour
 
     private AudioSource _currentAudioSource = null;
 
+    public GameObject _characterMesh;
+
     // Use this for initialization
     void Awake()
     {
@@ -728,7 +730,7 @@ public class GretaCharacterAnimator : MonoBehaviour
 
     public Transform findBone(string name)
     {
-        Transform[] allTransforms = gameObject.GetComponentsInChildren<Transform>(true);
+        Transform[] allTransforms = _characterMesh.GetComponentsInChildren<Transform>(true);
         foreach (Transform t in allTransforms)
         {
             if (t.name == name)

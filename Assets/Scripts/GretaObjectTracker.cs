@@ -4,13 +4,14 @@ using thriftImpl;
 /// <summary>
 /// Behaviour script to track objects in GRETA and to follow an object with an agent's gaze.
 /// </summary>
+[RequireComponent(typeof(GretaCharacterAnimator))]
 public class GretaObjectTracker : MonoBehaviour
 {
     /// <summary>The Thrift command sender linked to our GRETA instance.</summary>
     private CommandSender _commandSender;
 
     /// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
-    public GretaCharacterAnimator CharacterAnimScript;
+    protected GretaCharacterAnimator CharacterAnimScript;
 
     /// <summary>The object to follow with the agent's gaze.</summary>
     public GameObject ObjectToFollowWithGaze;
@@ -34,7 +35,8 @@ public class GretaObjectTracker : MonoBehaviour
 
 	void Start()
 	{
-		_commandSender = CharacterAnimScript.commandSender;
+        CharacterAnimScript = GetComponent<GretaCharacterAnimator>();
+        _commandSender = CharacterAnimScript.commandSender;
 
 		if (ObjectToFollowWithGaze != null)
 		{

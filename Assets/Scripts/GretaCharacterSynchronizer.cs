@@ -4,16 +4,17 @@ using thriftImpl;
 /// <summary>
 /// Behaviour script to synchronize a character in GRETA.
 /// </summary>
+[RequireComponent(typeof(GretaCharacterAnimator))]
 public class GretaCharacterSynchronizer : MonoBehaviour
 {
     /// <summary>The Thrift command sender linked to our GRETA instance.</summary>
     private CommandSender _commandSender;
 
     /// <summary>The animation script linked to the GRETA agent we want to add behaviours to.</summary>
-    public GretaCharacterAnimator CharacterAnimScript;
+    protected GretaCharacterAnimator CharacterAnimScript;
 
     /// <summary>The character which position, orientation and scale have to be synchronized and reproduced in the GRETA environment.</summary>
-	public GameObject character;
+	protected GameObject character;
 
     /// <summary>The character's head.</summary>
 	private GameObject characterHead;
@@ -40,7 +41,9 @@ public class GretaCharacterSynchronizer : MonoBehaviour
 
     void Start()
     {
-        _commandSender = CharacterAnimScript.commandSender;
+        CharacterAnimScript = GetComponent<GretaCharacterAnimator>();
+        character = CharacterAnimScript._characterMesh;
+         _commandSender = CharacterAnimScript.commandSender;
 
         character.transform.hasChanged = false;
 

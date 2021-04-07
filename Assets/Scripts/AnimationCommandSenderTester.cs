@@ -1,15 +1,15 @@
 using UnityEngine;
 
+[RequireComponent(typeof(GretaCharacterAnimator))]
 public class AnimationCommandSenderTester : MonoBehaviour {
 
-    public GameObject character;
     public string animationID;
 
     private GretaCharacterAnimator _charAnimScript;
 
     void Start()
     {
-        _charAnimScript = character.GetComponent<GretaCharacterAnimator>();
+        _charAnimScript = GetComponent<GretaCharacterAnimator>();
     }
 
     // Update is called once per frame
