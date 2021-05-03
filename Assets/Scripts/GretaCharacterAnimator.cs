@@ -61,6 +61,8 @@ public class GretaCharacterAnimator : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        InitCharacterMesh();
+
         changeTPoseToNPose();
         setUpSkeleton();
 
@@ -81,6 +83,24 @@ public class GretaCharacterAnimator : MonoBehaviour
 
         _currentAudioSource = getBone("Head").gameObject.AddComponent<AudioSource>();
         audioFilePlayer = new AudioFilePlayer();
+    }
+
+    protected void InitCharacterMesh()
+    {
+        if (_characterMesh == null)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform t = transform.GetChild(i);
+                if (t.gameObject.active)
+                {
+                    _characterMesh = t.gameObject;
+                    break;
+                }
+            }
+        }
+        if (_characterMesh == null)
+            Debug.LogError("No characterMesh assigned and no active child found");
     }
 
     public void FixedUpdate()
