@@ -319,13 +319,14 @@ public class CharacterManager : MonoBehaviour
 
     public void deleteOldMaterials()
     {
-
-
-
-
     }
 
+    public void createNewPrefab()
+    {
 
+        PrefabUtility.CreatePrefab("Assets/Prefabs/Characters/" + characterName + ".prefab", FBX);
+
+    }
 
 
 
@@ -386,6 +387,13 @@ public class CharacterManager : MonoBehaviour
             if (GUILayout.Button("Delete old materials "))
             {
                 characterGenerator.deleteOldMaterials();
+            }
+
+            // Add wig if it's a female 
+            EditorGUILayout.LabelField("Create a prefab for the new model ");
+            if (GUILayout.Button("Create Prefab"))
+            {
+                characterGenerator.createNewPrefab();
             }
 
 
