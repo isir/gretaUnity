@@ -7,19 +7,25 @@ using UnityEngine;
 public class DimensionFix : MonoBehaviour
 {
     // Gameobject arm
-    public string boneArm = "Arm";
-    
+
+    [Header("Arm")]
+
     public GameObject _leftArm;
     public GameObject _rightArm;
 
-    public Vector3 scaleArm = new Vector3(1.0f, 1.0f, 1.0f);
+    
+    public Vector3 scaleArmFactor = new Vector3(1.0f, 1.0f, 1.0f);
+    
+    //[Range(0f, 1f)]
 
     public bool ScaleArm = false;
-    
+
+    [Tooltip("AutomaticScaleForBetter...")]
     public bool automaticScale = false;
 
     // GameObject hand
-    public string BoneHand = "Hand";
+    //[Space(10)]
+    [Header("Hand")]
 
     public GameObject _leftHand;
     public GameObject _rightHand;
@@ -39,26 +45,26 @@ public class DimensionFix : MonoBehaviour
 
     void Awake()
     {
-       
+
     }
-    
+
 
     void Start()
     {
-      
+
     }
-    
+
 
     void Update()
 
     {
         //automatic scale for arms
-        if ( automaticScale == true)
+        if (automaticScale == true)
         {
             _leftArm.transform.localScale = automaticArmScale;
             _rightArm.transform.localScale = automaticArmScale;
-            
-            scaleArm = automaticArmScale;
+
+            scaleArmFactor = automaticArmScale;
 
             ScaleArm = false;
             ResetToOriginal = false;
@@ -67,20 +73,20 @@ public class DimensionFix : MonoBehaviour
         //manual scale for arms
         else if (ScaleArm == true)
         {
-            _leftArm.transform.localScale = scaleArm;
+            _leftArm.transform.localScale = scaleArmFactor;
 
             ResetToOriginal = false;
             automaticScale = false;
         }
 
         //reset the scale  
-        else if ( ResetToOriginal == true)
+        else if (ResetToOriginal == true)
         {
 
             _leftArm.transform.localScale = originalScale;
             _rightArm.transform.localScale = originalScale;
 
-            scaleArm = originalScale;
+            scaleArmFactor = originalScale;
             scaleHand = originalScale;
 
             ScaleArm = false;
@@ -101,6 +107,14 @@ public class DimensionFix : MonoBehaviour
         _leftHand.transform.localScale = scaleHand;
         _rightHand.transform.localScale = scaleHand;
 
+
+
+
         // Debug.Log("Running in edit mode");
     }
 }
+
+
+
+
+
