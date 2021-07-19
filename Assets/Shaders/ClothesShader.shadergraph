@@ -4,9 +4,6 @@
     "m_ObjectId": "29de2871fecc47b7acd8bd1438471850",
     "m_Properties": [
         {
-            "m_Id": "4400050f2c6944a085df44792ea3ed41"
-        },
-        {
             "m_Id": "94675000b0b642778adc96406b77f746"
         },
         {
@@ -2034,46 +2031,6 @@
     "m_Value": 1.0,
     "m_DefaultValue": 1.0,
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.VirtualTextureShaderProperty",
-    "m_ObjectId": "4400050f2c6944a085df44792ea3ed41",
-    "m_Guid": {
-        "m_GuidSerialized": "4823ec76-af8f-4219-a11c-2c203f069253"
-    },
-    "m_Name": "VirtualTexture",
-    "m_DefaultReferenceName": "VirtualTexture_4400050f2c6944a085df44792ea3ed41",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "layers": [
-            {
-                "layerName": "Layer0",
-                "layerRefName": "Layer_E96E232E",
-                "layerTexture": {
-                    "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
-                    "m_Guid": ""
-                },
-                "layerTextureType": 0
-            },
-            {
-                "layerName": "Layer1",
-                "layerRefName": "Layer_66BF7D1",
-                "layerTexture": {
-                    "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
-                    "m_Guid": ""
-                },
-                "layerTextureType": 0
-            }
-        ],
-        "procedural": false
-    }
 }
 
 {
