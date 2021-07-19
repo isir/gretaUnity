@@ -199,8 +199,8 @@ public class CharacterManager : MonoBehaviour
 
 
         // add the material to the folder assets 
-        AssetDatabase.CreateAsset(leftEyeMat, "Assets/Materials/M_" + characterName + "_leftEye.mat");
-        AssetDatabase.CreateAsset(rightEyeMat, "Assets/Materials/M_" + characterName + "_rightEye.mat");
+        AssetDatabase.CreateAsset(leftEyeMat, "Assets/Models/Characters/" + characterName + "/Materials/M_" + characterName + "_leftEye.mat");
+        AssetDatabase.CreateAsset(rightEyeMat, "Assets/Models/Characters/" + characterName + "/Materials/M_" + characterName + "_rightEye.mat");
 
 
         // assign new eyes material to the new character 
@@ -266,9 +266,9 @@ public class CharacterManager : MonoBehaviour
 
 
         // add the material to the folder assets 
-        AssetDatabase.CreateAsset(bodyMat, "Assets/Materials/M_" + characterName + "_body.mat");
-        AssetDatabase.CreateAsset(pantsMat, "Assets/Materials/M_" + characterName + "_pants.mat");
-        AssetDatabase.CreateAsset(shirtMat, "Assets/Materials/M_" + characterName + "_shirt.mat");
+        AssetDatabase.CreateAsset(bodyMat, "Assets/Models/Characters/" + characterName + "/Materials/M_" + characterName + "_body.mat");
+        AssetDatabase.CreateAsset(pantsMat, "Assets/Models/Characters/" + characterName + "/Materials/M_" + characterName + "_pants.mat");
+        AssetDatabase.CreateAsset(shirtMat, "Assets/Models/Characters/" + characterName + "/Materials/M_"+ characterName + "_shirt.mat");
 
     }
 
