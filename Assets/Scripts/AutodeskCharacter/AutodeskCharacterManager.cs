@@ -18,20 +18,17 @@ public class AutodeskCharacterManager : MonoBehaviour
     [Space(10)]
     [Header("Character Model")]
     public GameObject FBX;
-    public GameObject fbxClone;
 
     //Material List
-    [Space(10)]
-    [Header("Shared Material list")]
+    //[Space(10)]
+    //[Header("Shared Material list")]
 
 
-    public Material bodySharedMaterial;
-    public Material pantsSharedMaterial;
-    public Material shirtSharedMaterial;
-    public Material rightEyeSharedMaterial;
-    public Material leftEyeSharedMaterial;
-
-
+    private Material bodySharedMaterial;
+    private Material pantsSharedMaterial;
+    private Material shirtSharedMaterial;
+    private Material rightEyeSharedMaterial;
+    private Material leftEyeSharedMaterial;
 
     private Material bodyMatOriginal;
     private Material pantsMatOriginal;
@@ -40,11 +37,6 @@ public class AutodeskCharacterManager : MonoBehaviour
     private Material leftEyeMatOriginal;
     private Material TransEyesSharedMaterial;
 
-
-    //private Material N_bodySharedMaterial = Resources.Load<Material>("Materials/M_Body");
-
-
-    public int numberOfSlotMaterials;
 
     // Maps
     [Space(10)]
@@ -121,8 +113,8 @@ public class AutodeskCharacterManager : MonoBehaviour
 
     [Space(10)]
     [Header("Shaders")]
-    public Shader skinShaderNew;
-    public Shader skinShader;
+    public Shader skiNShader;
+    private Shader skinShader;
     public Shader clothesShader;
     public Shader hdrpLit;
 
@@ -144,10 +136,6 @@ public class AutodeskCharacterManager : MonoBehaviour
     private Vector3 hairScale = new Vector3(1f, 1f, 1f);
     private Vector3 hairOriginalPosition = new Vector3(1f, 1f, 1f);
     private Vector3 hairUpdatedPosition;
-
-    public float hairPosX = 0;
-    public float hairPosY = 0;
-    public float hairPosZ = 0;
 
     #endregion
 
@@ -260,7 +248,7 @@ public class AutodeskCharacterManager : MonoBehaviour
 
     public void setBodyMaterial()
     {
-        Material bodyMat = new Material(skinShaderNew);
+        Material bodyMat = new Material(skiNShader);
         Material pantsMat = new Material(clothesShader);
         Material shirtMat = new Material(clothesShader);
 
@@ -464,7 +452,7 @@ public class AutodeskCharacterManager : MonoBehaviour
             // trial 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Trial");
-            if (GUILayout.Button("Essai debug"))
+            if (GUILayout.Button("Test"))
             {
                 characterGenerator.DebugEssai();
             }
