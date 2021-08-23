@@ -137,6 +137,12 @@ public class AutodeskCharacterManager : MonoBehaviour
     private Vector3 hairOriginalPosition = new Vector3(1f, 1f, 1f);
     private Vector3 hairUpdatedPosition;
 
+
+
+    // folder
+
+    private string materialsFolderPath;
+
     #endregion
 
     #region functions
@@ -149,12 +155,25 @@ public class AutodeskCharacterManager : MonoBehaviour
     public void InstantiateNewCharacter()
     {
         // Assign the new materials to the fbx 
+        createMaterialsFolder();
         CreateEyesMaterials();
         setBodyMaterial();
 
         // Clone the fbx and place it
         Instantiate(FBX, SpawnHere, Quaternion.identity);
     }
+
+    public void createMaterialsFolder()
+    {
+        materialsFolderPath = "Assets / Models / Characters / " + characterName + "Materials";
+
+        if (!AssetDatabase.IsValidFolder(materialsFolderPath))
+        {
+            AssetDatabase.CreateFolder(("Assets / Models / Characters / " + characterName), "Materials");
+        }
+
+    }
+
 
     public void CreateEyesMaterials()
     {
@@ -279,12 +298,6 @@ public class AutodeskCharacterManager : MonoBehaviour
 
         _colorBlendMale = Resources.Load<Texture2D>("Textures/BodySkin/T_ColorTones");
         _colorBlendFemale = Resources.Load<Texture2D>("Textures/BodySkin/T_ColorTones_F");
-
-        // change body textures 
-        // old shader --------------------------------------------
-        //bodyMat.SetTexture("Texture2D_36645CC3", _colorMap);
-        //bodyMat.SetTexture("Texture2D_311772cd227f4f18a9b82a6f15179cc8", _normalMap);
-        // old shader --------------------------------------------
 
 
         bodyMat.SetTexture("Texture2D_15c73632403f4139bd1dcc997fa84fdb", _colorMap);
@@ -474,7 +487,7 @@ public class AutodeskCharacterManager : MonoBehaviour
             }
 
             // Fix bones of the hand 
-            EditorGUILayout.LabelField("Click if only the bones are rotated visually");
+            EditorGUILayout.LabelField("If the right hand's bones are rotated incorrectly");
             if (GUILayout.Button("Fix the right hand's bones"))
             {
                 characterGenerator.fixRighHandsBones();
