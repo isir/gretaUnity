@@ -25,8 +25,6 @@ public class AutodeskCharacterManager : MonoBehaviour
 
 
     private Material bodySharedMaterial;
-    private Material pantsSharedMaterial;
-    private Material shirtSharedMaterial;
     private Material rightEyeSharedMaterial;
     private Material leftEyeSharedMaterial;
 
@@ -53,11 +51,10 @@ public class AutodeskCharacterManager : MonoBehaviour
     public Color pantsColor;
     public Color shirtColor;
 
-    public enum hairColor { lightRed, dark, blonde }
-    public hairColor hairColorTone;
 
-    public enum hair { useExistingWig, addNewWig }
+    public enum hair { showExistingWig, hideExistingWig }
     public hair modelHair;
+   
 
 
     public enum eyesColor { Brown, Blue, Gray, Green, Hazel };
@@ -118,6 +115,12 @@ public class AutodeskCharacterManager : MonoBehaviour
     public Shader clothesShader;
     public Shader hdrpLit;
 
+    [Space(10)]
+    public GameObject generatedCharacter;
+    public GameObject hairPrefab;
+    public enum hairColor { lightRed, dark, blonde, brown }
+    public hairColor hairColorTone;
+
     // hair model 
 
     private GameObject originalFemaleHairObj;
@@ -146,21 +149,50 @@ public class AutodeskCharacterManager : MonoBehaviour
     #endregion
 
     #region functions
-
-    public void DebugEssai()
-    {
-        Debug.Log("Essai ");
-    }
-
-    public void InstantiateNewCharacter()
+    
+    public GameObject InstantiateNewCharacter()
     {
         // Assign the new materials to the fbx 
         createMaterialsFolder();
         CreateEyesMaterials();
-        setBodyMaterial();
+        SetBodyMaterial();
+        DisableEmbedded<Camera>();
+        DisableEmbedded<Light>();
+        
 
         // Clone the fbx and place it
-        Instantiate(FBX, SpawnHere, Quaternion.identity);
+        generatedCharacter = Instantiate(FBX, SpawnHere, Quaternion.identity);
+        generatedCharacter.name = characterName;
+        UpdateHair(generatedCharacter);
+
+
+        return generatedCharacter;
+    }
+
+    protected void UpdateHair(GameObject go)
+    {
+        // handle hairs
+        if (go.transform.Find("h_wig"))
+        {
+            existingHair = go.transform.Find("h_wig").gameObject;
+            existingHair.GetComponent<Renderer>().enabled = modelHair == hair.showExistingWig;
+        }
+    }
+
+    protected void DisableEmbedded<T>() where T : Component
+    {
+        if (FBX != null)
+        {
+            T embeddedCam = null;
+            do
+            {
+                embeddedCam = FBX.GetComponentInChildren<T>(false);
+                if (embeddedCam != null)
+                    embeddedCam.gameObject.SetActive(false);
+                else
+                    break;
+            } while (true);
+        }        
     }
 
     public void createMaterialsFolder()
@@ -171,7 +203,6 @@ public class AutodeskCharacterManager : MonoBehaviour
         {
             AssetDatabase.CreateFolder(("Assets / Models / Characters / " + characterName), "Materials");
         }
-
     }
 
 
@@ -182,13 +213,19 @@ public class AutodeskCharacterManager : MonoBehaviour
         TransEyesSharedMaterial = Resources.Load<Material>("Materials/M_TransEyes");
 
         // New copies of the eyes material 
-
-
         Material leftEyeMat = new Material(hdrpLit);
         Material rightEyeMat = new Material(hdrpLit);
 
-        leftEyeMatOriginal = Resources.Load<Material>("Materials/M_LeftEyes");
-        rightEyeMatOriginal = Resources.Load<Material>("Materials/M_RightEyes");
+        if (modelGender == gender.Female)
+        {
+            leftEyeMatOriginal = Resources.Load<Material>("Materials/M_LeftEye");
+            rightEyeMatOriginal = Resources.Load<Material>("Materials/M_RightEye");
+        }
+        else
+        {
+            leftEyeMatOriginal = Resources.Load<Material>("Materials/M_Male_LeftEye");
+            rightEyeMatOriginal = Resources.Load<Material>("Materials/M_Male_RightEye");
+        }
 
         leftEyeMat.CopyPropertiesFromMaterial(leftEyeMatOriginal);
         rightEyeMat.CopyPropertiesFromMaterial(rightEyeMatOriginal);
@@ -198,7 +235,6 @@ public class AutodeskCharacterManager : MonoBehaviour
         rightEye = FBX.transform.Find("h_R_eye").gameObject;
         transLeftEye = FBX.transform.Find("h_L_trans").gameObject;
         transRightEye = FBX.transform.Find("h_R_trans").gameObject;
-
 
         // Change texture for the eyecolor 
         if (EyesColor == eyesColor.Brown)
@@ -246,6 +282,11 @@ public class AutodeskCharacterManager : MonoBehaviour
 
 
         // add the material to the folder assets 
+        if (!AssetDatabase.IsValidFolder("Assets/Models/Characters/" + characterName))
+        {
+            AssetDatabase.CreateFolder("Assets/Models/Characters", characterName);
+            AssetDatabase.CreateFolder("Assets/Models/Characters/" + characterName, "Materials");
+        }
         AssetDatabase.CreateAsset(leftEyeMat, "Assets/Models/Characters/" + characterName + "/Materials/M_" + characterName + "_leftEye.mat");
         AssetDatabase.CreateAsset(rightEyeMat, "Assets/Models/Characters/" + characterName + "/Materials/M_" + characterName + "_rightEye.mat");
 
@@ -259,13 +300,9 @@ public class AutodeskCharacterManager : MonoBehaviour
             transRightEye.GetComponent<Renderer>().material = TransEyesSharedMaterial;
         }
         else Debug.Log("No child with name h_L_eye ");
-
-
-
-
     }
 
-    public void setBodyMaterial()
+    public void SetBodyMaterial()
     {
         Material bodyMat = new Material(skiNShader);
         Material pantsMat = new Material(clothesShader);
@@ -289,7 +326,7 @@ public class AutodeskCharacterManager : MonoBehaviour
         body = FBX.transform.Find("H_DDS_HighRes").gameObject;
 
         // assign each material slot 
-        bodyMaterials = body.GetComponent<Renderer>().materials;
+        bodyMaterials = body.GetComponent<Renderer>().sharedMaterials;
         bodyMaterials[0] = bodyMat;
         bodyMaterials[1] = pantsMat;
         bodyMaterials[2] = shirtMat;
@@ -315,8 +352,8 @@ public class AutodeskCharacterManager : MonoBehaviour
 
 
         // change pants and shirt colors
-        pantsSharedMaterial.SetColor("Color_9f3dd916891141c1945eade78a3c804e", pantsColor);
-        shirtSharedMaterial.SetColor("Color_9f3dd916891141c1945eade78a3c804e", shirtColor);
+        pantsMat.SetColor("Color_9f3dd916891141c1945eade78a3c804e", pantsColor);
+        shirtMat.SetColor("Color_9f3dd916891141c1945eade78a3c804e", shirtColor);
 
 
         // Assign the new material to the new character
@@ -341,11 +378,15 @@ public class AutodeskCharacterManager : MonoBehaviour
 
     public void rescaleHands()
     {
+        GameObject obj = FBX;
+        if (generatedCharacter != null)
+            obj = generatedCharacter;
+
         // find hands and arms children objects of the fbx
-        leftHand = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/LeftShoulder/LeftArm/LeftArmRoll/LeftForeArm/LeftForeArmRoll/LeftHand").gameObject;
-        rightHand = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand").gameObject;
-        leftArm = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/LeftShoulder/LeftArm").gameObject;
-        rightArm = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm").gameObject;
+        leftHand = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/LeftShoulder/LeftArm/LeftArmRoll/LeftForeArm/LeftForeArmRoll/LeftHand").gameObject;
+        rightHand = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand").gameObject;
+        leftArm = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/LeftShoulder/LeftArm").gameObject;
+        rightArm = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm").gameObject;
 
         // scale the hands and arms if the character is female 
         if (modelGender == gender.Female)
@@ -367,10 +408,14 @@ public class AutodeskCharacterManager : MonoBehaviour
 
     public void fixRighHandsBones()
     {
+        GameObject obj = FBX;
+        if (generatedCharacter != null)
+            obj = generatedCharacter;
+
         // find bones 
-        rightHandThumb1 = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand/RightFingerBase/RightHandThumb1").gameObject;
-        rightHandThumb2 = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand/RightFingerBase/RightHandThumb1/RightHandThumb2").gameObject;
-        rightHandThumb3 = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand/RightFingerBase/RightHandThumb1/RightHandThumb2/RightHandThumb3").gameObject;
+        rightHandThumb1 = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand/RightFingerBase/RightHandThumb1").gameObject;
+        rightHandThumb2 = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand/RightFingerBase/RightHandThumb1/RightHandThumb2").gameObject;
+        rightHandThumb3 = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/RightShoulder/RightArm/RightArmRoll/RightForeArm/RightForeArmRoll/RightHand/RightFingerBase/RightHandThumb1/RightHandThumb2/RightHandThumb3").gameObject;
 
         // rotate 
         rightHandThumb1.transform.localRotation = Quaternion.Euler(rotationThumb1);
@@ -379,71 +424,76 @@ public class AutodeskCharacterManager : MonoBehaviour
     }
 
 
-    public void addWig()
+    public GameObject addWig()
     {
-        if (modelHair == hair.useExistingWig)
-        {
-            // add a new material hair 
-            // change its color 
-        }
+        GameObject obj = FBX;
 
-        if (modelHair == hair.addNewWig)
-        {
-            //hide existing hair 
-            existingHair = FBX.transform.Find("h_wig").gameObject;
-            existingHair.GetComponent<Renderer>().enabled = false;
-
-            // load new hair with materials
+        if (generatedCharacter != null)
+            obj = generatedCharacter;
+                    
+        // load new hair with materials
+        if (hairPrefab != null)
+            originalFemaleHairObj = hairPrefab;
+        else
             originalFemaleHairObj = Resources.Load<GameObject>("Models/Hair/Female_Hair");
-            originalFemaleHairMat = Resources.Load<Material>("Materials/M_FemaleHair_Bun");
+        originalFemaleHairMat = Resources.Load<Material>("Materials/M_FemaleHair_Bun");
 
-            // hair textures 
-            femaleHair_blond = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Blond");
-            femaleHair_red = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Red");
-            femaleHair_dark = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Dark");
+        // hair textures 
+        femaleHair_blond = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Blond");
+        femaleHair_red = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Red");
+        femaleHair_dark = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Dark");
+        femaleHair_brown = Resources.Load<Material>("Materials/M_FemaleHair_Bun_Brown");
 
-            cloneFemaleHairObj = Instantiate(originalFemaleHairObj);
+        cloneFemaleHairObj = Instantiate(originalFemaleHairObj, generatedCharacter.transform, true);
 
-            cloneFemaleHairMaterials = cloneFemaleHairObj.GetComponent<Renderer>().materials;
+        Renderer renderer = cloneFemaleHairObj.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            cloneFemaleHairMaterials = renderer.sharedMaterials;
 
             // hair color tone 
-            if (hairColorTone == hairColor.lightRed) { cloneFemaleHairMaterials[1] = femaleHair_red; }
-            if (hairColorTone == hairColor.dark) { cloneFemaleHairMaterials[1] = femaleHair_dark; }
-            if (hairColorTone == hairColor.blonde) { cloneFemaleHairMaterials[1] = femaleHair_blond; }
+            int colorIndex = -1;
+            if (cloneFemaleHairMaterials.Length >= 2)
+                colorIndex = 1;
+            if (colorIndex > -1)
+            {
+                if (hairColorTone == hairColor.lightRed) { cloneFemaleHairMaterials[colorIndex] = femaleHair_red; }
+                else if (hairColorTone == hairColor.dark) { cloneFemaleHairMaterials[colorIndex] = femaleHair_dark; }
+                else if (hairColorTone == hairColor.blonde) { cloneFemaleHairMaterials[colorIndex] = femaleHair_blond; }
+                else if (hairColorTone == hairColor.brown) { cloneFemaleHairMaterials[colorIndex] = femaleHair_brown; }
 
+                // assign material to the new cloned object 
+                cloneFemaleHairObj.GetComponent<Renderer>().materials = cloneFemaleHairMaterials;
 
-            // assign material to the new cloned object 
-            cloneFemaleHairObj.GetComponent<Renderer>().materials = cloneFemaleHairMaterials;
+                //hair position and scale 
 
-            //hair position and scale 
-
-            cloneFemaleHairObj.transform.position = new Vector3(0.001f, -0.139f, 0.096f);
-            cloneFemaleHairObj.transform.localScale = new Vector3(0.43f, 0.43f, 0.43f);
-
-            Debug.Log("Essai");
-            Debug.Log(cloneFemaleHairObj.transform.position);
-
-           
-
-           //find bone head and make the hair child for the bone 
-            headBone = FBX.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/Neck/Neck1/Head").gameObject;
-            cloneFemaleHairObj.transform.parent = headBone.transform;
-
-            //Instantiate(FBX, SpawnHere, Quaternion.identity);
-
-
-            //if (existingHair != null)
-            //{
-            //    Instantiate(CloneFemaleHairObj, hairOriginalPosition, Quaternion.identity);
-            //}
-
+                cloneFemaleHairObj.transform.position = new Vector3(0.001f, -0.139f, 0.096f);
+                cloneFemaleHairObj.transform.localScale = new Vector3(0.43f, 0.43f, 0.43f);
+            }
 
         }
+        //find bone head and make the hair child for the bone 
+        headBone = obj.transform.Find("master/Reference/Hips/Spine/Spine1/Spine2/Spine3/Spine4/Neck/Neck1/Head").gameObject;
+        cloneFemaleHairObj.transform.SetParent(headBone.transform);
+
+        //Instantiate(FBX, SpawnHere, Quaternion.identity);
+
+
+        //if (existingHair != null)
+        //{
+        //    Instantiate(CloneFemaleHairObj, hairOriginalPosition, Quaternion.identity);
+        //}
+
+        return cloneFemaleHairObj;
+       
     }
 
     public void createNewPrefab()
     {
-        PrefabUtility.CreatePrefab("Assets/Prefabs/Characters/" + characterName + ".prefab", FBX);
+        if (generatedCharacter != null)
+            PrefabUtility.SaveAsPrefabAssetAndConnect(generatedCharacter, "Assets/Prefabs/Characters/" + characterName + ".prefab", InteractionMode.UserAction);
+        else
+            Debug.LogError("Create charater first");
     }
 
 
@@ -462,20 +512,18 @@ public class AutodeskCharacterManager : MonoBehaviour
 
             AutodeskCharacterManager characterGenerator = (AutodeskCharacterManager)target;
 
-            // trial 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Trial");
-            if (GUILayout.Button("Test"))
-            {
-                characterGenerator.DebugEssai();
-            }
-
             // Generate new character 
+            EditorGUILayout.HelpBox("First generate a charecter, then you can apply modifications",MessageType.Info);
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Generate a new character with the new materials");
             if (GUILayout.Button("Generate New Character"))
             {
-                characterGenerator.InstantiateNewCharacter();
+                GameObject go = characterGenerator.InstantiateNewCharacter();               
+                if (go != null)
+                {
+                    go.SetActive(true);
+                    Selection.activeGameObject = go;
+                }
             }
 
             // Rescale Hands
@@ -494,10 +542,12 @@ public class AutodeskCharacterManager : MonoBehaviour
             }
 
             // Add wig if it's a female 
-            EditorGUILayout.LabelField("Choose the color of the wig ");
-            if (GUILayout.Button("Add Random wig"))
+            EditorGUILayout.LabelField("Add the selected hair prefab as a wig");
+            if (GUILayout.Button("Add wig"))
             {
-                characterGenerator.addWig();
+                GameObject go = characterGenerator.addWig();
+                if(go != null)
+                    Selection.activeGameObject = go;
             }
 
             // create the prefab  

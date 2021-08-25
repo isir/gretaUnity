@@ -11,62 +11,62 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Cap
-    second: {fileID: 2100000, guid: dbb894b953fc503449c65e2139d934cf, type: 2}
+    second: {fileID: 2100000, guid: cff8d69cd65c32e48ad3d063d95622d0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Hair_2
-    second: {fileID: 2100000, guid: 3d66b409038931941909bae68162afba, type: 2}
+    second: {fileID: 2100000, guid: f26de58d111a9a347b5d9d55d6d80cf6, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Hair__1
-    second: {fileID: 2100000, guid: 76f3d7765424a9244ad99be4af0b2f7a, type: 2}
+    second: {fileID: 2100000, guid: e4a2a4aaed966d043874d3f486ac5c90, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Cap [Albedo]
-    second: {fileID: 2800000, guid: 27578d4d9e8c2904bb27fd21451394df, type: 3}
+    second: {fileID: 2800000, guid: 2631fa3da6e30734c89fcc01d19e8927, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Cap [Normal]
-    second: {fileID: 2800000, guid: 3f3df82740def0c41a6d870d23b9bf29, type: 3}
+    second: {fileID: 2800000, guid: a208f0851647553449352b86a3fc0db8, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Cap [Specular]
-    second: {fileID: 2800000, guid: 4f97430900785fe4dbb246cc2c016dc3, type: 3}
+    second: {fileID: 2800000, guid: 85322df2fe517684f97a0a2a4fdeaf1a, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Hair-1 (Normal)
-    second: {fileID: 2800000, guid: 15580d72b20921b42a885568b69afd08, type: 3}
+    second: {fileID: 2800000, guid: 3da49e67e775ac8439ea4a463326247c, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Hair-1 [Albedo]
-    second: {fileID: 2800000, guid: 4ad6ce2131331434fb9c1e3884e9def6, type: 3}
+    second: {fileID: 2800000, guid: e7de328029c2ba349a404e0eff90eda2, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Hair-1 [Specular]
-    second: {fileID: 2800000, guid: 9b8aeb66e2a1bf949b609fd289e88f92, type: 3}
+    second: {fileID: 2800000, guid: 01812a1ee58fb7e4b82383525923eea1, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Hair-2 [Albedo]
-    second: {fileID: 2800000, guid: a28b6acc09f555e44887261d4cc51373, type: 3}
+    second: {fileID: 2800000, guid: 0c3076edc87648d42a9157a48f955061, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Hair-2 [Normal]
-    second: {fileID: 2800000, guid: 4d3ee46bff14e42489cdec287d8465c9, type: 3}
+    second: {fileID: 2800000, guid: b6022b74eefe1ca42b261a0008aebab2, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Hair-2 [Specular]
-    second: {fileID: 2800000, guid: 975dc2df2acab12448988bdcbdf6a7ec, type: 3}
+    second: {fileID: 2800000, guid: bc2cbc5afa69a724ab6d2a4670a7ec4b, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
