@@ -4,12 +4,14 @@
 
 Simple Unity project that connects Unity3D and Greta. For more information on Greta, please see the [Greta repo](https://github.com/isir/greta/#greta)
 
-![GretaUnity logo](https://user-images.githubusercontent.com/54807091/88153043-2f60d780-cc05-11ea-93e5-cc428a41ae99.PNG)
+![GretaUnity logo](https://user-images.githubusercontent.com/16133942/131155744-12f2cd5b-8e8e-49d8-8978-e846fd9ead02.png)
+
 
 Welcome to the public repository of the GretaUnity project.
 Greta is a virtual character engine that allows generating socio-emotional behaviors in order to build natural interactional scenario with human users.
 
-This project integrates a Greta agent in a Unity3D environment. It was tested on Unity 5.4.1f1, 2019.2.13f1, 2020.2.1f1.
+This project integrates a Greta agent in a Unity3D environment. It was tested on Unity 2020.3.x
+![UnityEditor](https://user-images.githubusercontent.com/16133942/131155909-39b70004-b3bc-4e2c-995c-b0981987bfa9.png)
 
 # Quick start
 
