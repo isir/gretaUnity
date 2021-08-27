@@ -4,6 +4,7 @@ using UnityEngine;
 public class AnimationCommandSenderTester : MonoBehaviour {
 
     public string animationID;
+    public KeyCode keyboardTrigger;
 
     private GretaCharacterAnimator _charAnimScript;
 
@@ -15,7 +16,8 @@ public class AnimationCommandSenderTester : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if (Input.GetKeyUp(KeyCode.T) && animationID != null && animationID.Trim().Length > 0)
+        
+        if (Input.GetKeyUp(keyboardTrigger) && animationID != null && animationID.Trim().Length > 0)
         {
             _charAnimScript.PlayAgentAnimation(animationID);
         }

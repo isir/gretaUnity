@@ -14,7 +14,7 @@ public class GretaEnvironmentSynchronizer : MonoBehaviour
     public GretaCharacterAnimator CharacterAnimScript;
 
     /// <summary>The objects which's positions, orientations and scales have to be synchronized and reproduced in the GRETA environment.</summary>
-    public List<GameObject> synchronizedObjects = new List<GameObject>();
+    public List<GretaObjectMetadata> synchronizedObjects;
 
     /// <summary>
     /// Indicates whether we've done the initialization of the objects synchronized in GRETA or not yet.<br/>
@@ -25,7 +25,7 @@ public class GretaEnvironmentSynchronizer : MonoBehaviour
     void Start()
     {
         _commandSender = CharacterAnimScript.commandSender;
-
+        /*
         List<GameObject> synchronizedObjectsCopy = new List<GameObject>(synchronizedObjects);
         foreach (GameObject synchronizedObject in synchronizedObjectsCopy)
         {
@@ -35,7 +35,7 @@ public class GretaEnvironmentSynchronizer : MonoBehaviour
         foreach (GameObject synchronizedObject in synchronizedObjects)
         {
             synchronizedObject.transform.hasChanged = false;
-        }
+        }*/
     }
 
     void InsertObjectsToGazeAt(GameObject gameObject, List<GameObject> synchronizedObjects)
@@ -58,15 +58,16 @@ public class GretaEnvironmentSynchronizer : MonoBehaviour
     void LateUpdate()
     {
         // Using late update so that the position values we send are taken after all possible calculations (physics, etc).
-
+        
         if (!_instantiated)
         {
             if (!_commandSender.isConnected()) { return; }
 
             // Initialise the GRETA environment if it hasn't been done before.
-            foreach (GameObject synchronizedObject in synchronizedObjects)
+            foreach (GretaObjectMetadata synchronizedObject in synchronizedObjects)
             {
-                _commandSender.NotifyObject(synchronizedObject);
+                GameObject go = synchronizedObject.gameObject;
+                _commandSender.NotifyObject(go);
                 synchronizedObject.transform.hasChanged = false;
             }
 
@@ -74,15 +75,21 @@ public class GretaEnvironmentSynchronizer : MonoBehaviour
         }
         else
         {
-            foreach (GameObject synchronizedObject in synchronizedObjects)
+            foreach (GretaObjectMetadata synchronizedObject in synchronizedObjects)
             {
+                GameObject go = synchronizedObject.gameObject;
                 // If the synchronized object has changed since the last frame, update the GRETA Environment.
-                if (synchronizedObject.transform.hasChanged)
+                if (go.transform.hasChanged)
                 {
-                    _commandSender.NotifyObject(synchronizedObject);
+                    _commandSender.NotifyObject(go);
                     synchronizedObject.transform.hasChanged = false;
                 }
             }
         }
+        /*
+        foreach (GretaObjectMetadata synchronizedObject in synchronizedObjects)
+        {
+            _commandSender.NotifyObject(synchronizedObject.gameObject);
+        }*/
     }
 }
