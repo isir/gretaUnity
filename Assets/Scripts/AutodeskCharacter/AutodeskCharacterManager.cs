@@ -11,9 +11,6 @@ public class AutodeskCharacterManager : MonoBehaviour
 
     public string characterName;
 
-    // Placement of the new fbx mesh
-    public Vector3 SpawnHere;
-
     //Fbx of the character 
     [Space(10)]
     [Header("Character Model")]
@@ -161,7 +158,7 @@ public class AutodeskCharacterManager : MonoBehaviour
         
 
         // Clone the fbx and place it
-        generatedCharacter = Instantiate(FBX, SpawnHere, Quaternion.identity);
+        generatedCharacter = Instantiate(FBX, transform.position, Quaternion.identity);
         generatedCharacter.name = characterName;
         UpdateHair(generatedCharacter);
 

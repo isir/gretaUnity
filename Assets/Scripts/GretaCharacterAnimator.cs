@@ -87,7 +87,7 @@ public class GretaCharacterAnimator : MonoBehaviour
 
     protected void InitCharacterMesh()
     {
-        if (_characterMesh == null)
+        if (_characterMesh == null || !_characterMesh.activeSelf)
         {
             for (int i = 0; i < transform.childCount; i++)
             {
@@ -327,7 +327,7 @@ public class GretaCharacterAnimator : MonoBehaviour
         {
             if (commandSender.isConnected())
             {
-                commandSender.playAnimation(animationID + ".xml", attitude);
+                commandSender.playAnimation(animationID, attitude);
             }
             else {
                 Debug.LogWarning("AnimationReceiver on host: " + commandSender.getHost() + " and port: " + commandSender.getPort() + " not connected");
