@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -11,6 +12,11 @@ public class SceneManager : MonoBehaviour
     public const string url1 = "tcp://137.194.54.80:61615/";
 
     public const string FILEURL = "Config"; // file stores list of URLs
+
+    internal static object getGetActiveScene()
+    {
+        throw new NotImplementedException();
+    }
 
     public static string BAPTopic = "BAP";
     public static string FAPTopic = "FAP";
